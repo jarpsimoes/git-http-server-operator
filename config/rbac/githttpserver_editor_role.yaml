@@ -1,0 +1,24 @@
+# permissions for end users to edit githttpservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: githttpserver-editor-role
+rules:
+- apiGroups:
+  - jarpsimoes.github.io
+  resources:
+  - githttpservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - jarpsimoes.github.io
+  resources:
+  - githttpservers/status
+  verbs:
+  - get
