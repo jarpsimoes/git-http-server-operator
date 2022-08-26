@@ -55,5 +55,5 @@ jobs:
 
       - name: Build and push Docker image
         run: | 
-          make docker-build docker-push IMG=jarpsimoes/git_http_server_operator:v0.${SHORT_SHA}
-          make docker-push IMG=jarpsimoes/git_http_server_operator
+          make docker-build docker-push IMG=docker.io/jarpsimoes/git_http_server_operator:v0.${SHORT_SHA}
+          make docker-push IMG=docker.io/jarpsimoes/git_http_server_operator
