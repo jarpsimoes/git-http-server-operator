@@ -31,12 +31,12 @@ jobs:
           infile: cover.out
           outfile: coverage.lcov
           
-#      - name: Codecov Reports
-#        uses: codecov/codecov-action@v3.1.0
-#        with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
-#          files: coverage.lcov
-#          fail_ci_if_error: true 
+      - name: Codecov Reports
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.lcov
+          fail_ci_if_error: true 
                   
   build:
     if: github.ref == 'refs/heads/main'
