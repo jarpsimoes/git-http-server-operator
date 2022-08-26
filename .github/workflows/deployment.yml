@@ -65,7 +65,3 @@ jobs:
         with:
           name: operator-deployment
           path: dist/git-http-server-operator.yaml
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v1.0.3
-        with:
-          path: dist/git-http-server-operator.yaml
