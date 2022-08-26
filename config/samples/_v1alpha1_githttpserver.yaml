@@ -6,7 +6,5 @@ spec:
   image: jarpsimoes/git_http_server:v0.072c0883
   repo-url: https://github.com/jarpsimoes/html_sample.git
   repo-username: http_sample
-  repo-password: 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
-  repo-branch: main
 
   # TODO(user): Add fields here
