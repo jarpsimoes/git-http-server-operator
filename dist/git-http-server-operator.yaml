@@ -69,7 +69,6 @@ spec:
               repo-username:
                 type: string
             required:
-            - repo-branch
             - repo-url
             type: object
           status:
@@ -332,7 +331,7 @@ spec:
         - --leader-elect
         command:
         - /manager
-        image: docker.io/jarpsimoes/git_http_server_operator:v0.0.1-alpha-2
+        image: docker.io/jarpsimoes/git_http_server_operator:v0.0.1-alpha-3
         livenessProbe:
           httpGet:
             path: /healthz
