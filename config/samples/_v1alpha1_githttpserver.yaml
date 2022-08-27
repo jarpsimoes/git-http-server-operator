@@ -3,8 +3,5 @@ kind: GitHttpServer
 metadata:
   name: githttpserver-sample
 spec:
-  image: jarpsimoes/git_http_server:v0.072c0883
-  repo-url: https://github.com/jarpsimoes/html_sample.git
-  repo-username: http_sample
-
-  # TODO(user): Add fields here
+  repo-url: https://github.com/jarpsimoes/jarpsimoes.github.io.git
+  repo-branch: main

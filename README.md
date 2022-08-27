@@ -1,94 +1,130 @@
-# operator
-// TODO(user): Add simple overview of use/purpose
+# Git HTTP Server operator
+This operator it's a controller for 
+[GIT Http Server](https://github.com/jarpsimoes/git-http-server), 
+providing support to simplify deployments inside complex clusters. 
+With this operator will be able to deploy HTML5 apps with "NoOps" paradigm.
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+Git Http Server Operator is written Go with [operator-sdk](https://sdk.operatorframework.io/):
+
+- **operator-sdk version:** v1.22.2 
+- **commit:** da3346113a8a75e11225f586482934000504a60f
+- **kubernetes version:** v1.24.1
+- **go version:** go1.18.4
+
+Should be compatible with kubernetes version: Kubernetes +1.18*
+
+When GitHttpServer was deployed will be provided inside cluster:
+- Deployment with GitHttpServer
+- Service to exposed HTTP_PORT
 
 ## Getting Started
-You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
-**Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
 
-### Running on the cluster
-1. Install Instances of Custom Resources:
+### Requirements:
+- Should be able to connect with target cluster via kubectl (command line)
+- Should have permissions to deploy operators inside cluster
 
-```sh
-kubectl apply -f config/samples/
+### 1. Install Operator inside cluster
+Download manifests and apply on cluster:
+```shell
+$ curl https://raw.githubusercontent.com/jarpsimoes/git-http-server-operator/main/dist/git-http-server-operator.yaml | kubectl apply -f -
+```
+Check if operator is running:
+```shell
+$ kubectl get nodes -n operator-system
+
+NAME                                   READY    STATUS    RESTARTS   AGE
+operator-controller-manager-####-####   2/2     Running   0          2m5s
 ```
 
-2. Build and push your image to the location specified by `IMG`:
-	
-```sh
-make docker-build docker-push IMG=<some-registry>/operator:tag
-```
-	
-3. Deploy the controller to the cluster with the image specified by `IMG`:
-
-```sh
-make deploy IMG=<some-registry>/operator:tag
-```
-
-### Uninstall CRDs
-To delete the CRDs from the cluster:
-
-```sh
-make uninstall
+### 2. Deploy simple git http server
+Create operator descriptor file as sample.yaml:
+```yaml
+apiVersion: jarpsimoes.github.io/v1alpha1
+kind: GitHttpServer
+metadata:
+  name: githttpserver-sample
+spec:
+  repo-url: https://github.com/jarpsimoes/html_sample.git
 ```
 
-### Undeploy controller
-UnDeploy the controller to the cluster:
-
-```sh
-make undeploy
+Deploy GitHttpServer:
+```shell
+$ kubectl apply -f sample.yaml
 ```
 
-## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
+Check installed components:
 
-### How it works
-This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
+**Deployment:**
+```shell
+$ kubectl decribe deployment githttpserver-sample
+Name:                   githttpserver-sample-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 27 Aug 2022 02:24:14 +0100
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=githttpserver-sample,operator=git-http-server-operator,tier=backend
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=githttpserver-sample
+           operator=git-http-server-operator
+           tier=backend
+  Containers:
+   githttpserver-sample-pod:
+    Image:      jarpsimoes/git_http_server:latest
+    Port:       8081/TCP
+    Host Port:  0/TCP
+    Liveness:   http-get http://:8081/_health delay=0s timeout=1s period=10s #success=1 #failure=3
+    Startup:    http-get http://:8081/_health delay=0s timeout=1s period=10s #success=1 #failure=3
+    Environment:
+      PATH_CLONE:          _clone
+      PATH_PULL:           _pull
+      PATH_VERSION:        _version
+      PATH_WEBHOOK:        _hook
+      PATH_HEALTH:         _health
+      REPO_BRANCH:         main
+      REPO_TARGET_FOLDER:  target-git
+      REPO_URL:            https://github.com/jarpsimoes/jarpsimoes.github.io.git
+      HTTP_PORT:           8081
+    Mounts:                <none>
+  Volumes:                 <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   githttpserver-sample-deployment-c5669cc57 (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  7m2s  deployment-controller  Scaled up replica set githttpserver-sample-deployment-c5669cc57 to 1
+```
+**Service:**
+```shell
+$ kubectl describe service githttpserver-sample-service
+Name:              githttpserver-sample-service
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          app=githttpserver-sample,operator=git-http-server-operator,tier=backend
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.3.32.138
+IPs:               10.3.32.138
+Port:              <unset>  80/TCP
+TargetPort:        8081/TCP
+Endpoints:         10.1.0.34:8081
+Session Affinity:  None
+Events:            <none>
 
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/) 
-which provides a reconcile function responsible for synchronizing resources untile the desired state is reached on the cluster 
-
-### Test It Out
-1. Install the CRDs into the cluster:
-
-```sh
-make install
 ```
 
-2. Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running):
+**Note:** TO-DO - Configurations available
 
-```sh
-make run
-```
-
-**NOTE:** You can also run this in one step by running: `make install run`
-
-### Modifying the API definitions
-If you are editing the API definitions, generate the manifests such as CRs or CRDs using:
-
-```sh
-make manifests
-```
-
-**NOTE:** Run `make --help` for more information on all potential `make` targets
-
-More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
-
-## License
-
-Copyright 2022.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+**Note:** TO-DO - Complex implementations
 
