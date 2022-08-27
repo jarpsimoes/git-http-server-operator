@@ -1,4 +1,7 @@
 # Git HTTP Server operator
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/19853b8601294035ba12bc416727f52d)](https://www.codacy.com/gh/jarpsimoes/git-http-server-operator/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jarpsimoes/git-http-server-operator&amp;utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/jarpsimoes/git-http-server-operator/branch/main/graph/badge.svg?token=5G1304MLD1)](https://codecov.io/gh/jarpsimoes/git-http-server-operator)
+
 This operator it's a controller for 
 [GIT Http Server](https://github.com/jarpsimoes/git-http-server), 
 providing support to simplify deployments inside complex clusters. 
