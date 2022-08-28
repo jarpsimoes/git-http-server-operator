@@ -34,7 +34,7 @@ $ curl https://raw.githubusercontent.com/jarpsimoes/git-http-server-operator/mai
 ```
 Check if operator is running:
 ```shell
-$ kubectl get nodes -n operator-system
+$ kubectl get nodes -n ghserver-operator-system
 
 NAME                                   READY    STATUS    RESTARTS   AGE
 operator-controller-manager-####-####   2/2     Running   0          2m5s
