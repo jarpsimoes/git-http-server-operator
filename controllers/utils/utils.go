@@ -7,6 +7,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"log"
 	"reflect"
+	"strings"
 )
 
 var dictionaryPaths = map[string]string{
@@ -82,6 +83,25 @@ func MergeConfigurationWithEnvironmentVariables(v githttpserver1alpha1.GitHttpSe
 			Value:     portString(specs.HttpPort),
 		})
 	}
+
+	customRoutes := specs.CustomRoutes
+
+	for _, customRoute := range customRoutes {
+		variableName := strings.ReplaceAll(customRoute.GetPath(), "/", ".")
+		log.Printf("FIX: Variable name %s\n", variableName)
+		envVariables = append(envVariables, corev1.EnvVar{
+			Name:  fmt.Sprintf("GHS_CUSTOM_PATH_%s", variableName),
+			Value: customRoute.Target,
+		})
+
+		if customRoute.Rewrite {
+			envVariables = append(envVariables, corev1.EnvVar{
+				Name:  fmt.Sprintf("GHS_CUSTOM_REWRITE_%s", variableName),
+				Value: "true",
+			})
+		}
+	}
+
 	return envVariables
 }
 func GetProbe(v githttpserver1alpha1.GitHttpServer) corev1.Probe {

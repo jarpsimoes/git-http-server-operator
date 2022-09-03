@@ -18,10 +18,25 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"strings"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+type CustomRoutes struct {
+	Path    string `json:"path"`
+	Target  string `json:"target"`
+	Rewrite bool   `json:"rewrite,omitempty"`
+}
+
+// GetPath - Return path with no initial slash
+func (in CustomRoutes) GetPath() string {
+	if strings.HasPrefix(in.Path, "/") {
+		return in.Path[1:len(in.Path)]
+	} else {
+		return in.Path
+	}
+}
 
 // GitHttpServerSpec defines the desired state of GitHttpServer
 type GitHttpServerSpec struct {
@@ -29,18 +44,19 @@ type GitHttpServerSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of GitHttpServer. Edit githttpserver_types.go to remove/update
-	Image        string `json:"image,omitempty"`
-	PathClone    string `json:"path-clone,omitempty"`
-	PathPull     string `json:"path-pull,omitempty"`
-	PathVersion  string `json:"path-version,omitempty"`
-	PathWebHook  string `json:"path-web-hook,omitempty"`
-	PathHealth   string `json:"path-health,omitempty"`
-	RepoURL      string `json:"repo-url"`
-	RepoBranch   string `json:"repo-branch,omitempty"`
-	RepoTarget   string `json:"repo-target,omitempty"`
-	RepoUsername string `json:"repo-username,omitempty"`
-	RepoPassword string `json:"repo-password,omitempty"`
-	HttpPort     int32  `json:"http-port,omitempty"`
+	Image        string         `json:"image,omitempty"`
+	PathClone    string         `json:"path-clone,omitempty"`
+	PathPull     string         `json:"path-pull,omitempty"`
+	PathVersion  string         `json:"path-version,omitempty"`
+	PathWebHook  string         `json:"path-web-hook,omitempty"`
+	PathHealth   string         `json:"path-health,omitempty"`
+	RepoURL      string         `json:"repo-url"`
+	RepoBranch   string         `json:"repo-branch,omitempty"`
+	RepoTarget   string         `json:"repo-target,omitempty"`
+	RepoUsername string         `json:"repo-username,omitempty"`
+	RepoPassword string         `json:"repo-password,omitempty"`
+	HttpPort     int32          `json:"http-port,omitempty"`
+	CustomRoutes []CustomRoutes `json:"custom-routes,omitempty"`
 }
 
 // GitHttpServerStatus defines the observed state of GitHttpServer

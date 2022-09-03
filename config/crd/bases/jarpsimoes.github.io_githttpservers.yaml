@@ -35,6 +35,23 @@ spec:
           spec:
             description: GitHttpServerSpec defines the desired state of GitHttpServer
             properties:
+              custom-routes:
+                items:
+                  description: 'EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
+                    NOTE: json tags are required.  Any new fields you add must have
+                    json tags for the fields to be serialized.'
+                  properties:
+                    path:
+                      type: string
+                    rewrite:
+                      type: boolean
+                    target:
+                      type: string
+                  required:
+                  - path
+                  - target
+                  type: object
+                type: array
               http-port:
                 format: int32
                 type: integer
@@ -63,7 +80,6 @@ spec:
               repo-username:
                 type: string
             required:
-            - repo-branch
             - repo-url
             type: object
           status:
