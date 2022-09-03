@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
-  name: operator-system
+  name: ghserver-operator-system
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -83,14 +83,14 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: operator-controller-manager
-  namespace: operator-system
+  name: ghserver-operator-controller-manager
+  namespace: ghserver-operator-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: operator-leader-election-role
-  namespace: operator-system
+  name: ghserver-operator-leader-election-role
+  namespace: ghserver-operator-system
 rules:
 - apiGroups:
   - ""
@@ -128,7 +128,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: operator-manager-role
+  name: ghserver-operator-manager-role
 rules:
 - apiGroups:
   - apps
@@ -185,7 +185,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: operator-metrics-reader
+  name: ghserver-operator-metrics-reader
 rules:
 - nonResourceURLs:
   - /metrics
@@ -195,7 +195,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: operator-proxy-role
+  name: ghserver-operator-proxy-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -213,42 +213,42 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: operator-leader-election-rolebinding
-  namespace: operator-system
+  name: ghserver-operator-leader-election-rolebinding
+  namespace: ghserver-operator-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: operator-leader-election-role
+  name: ghserver-operator-leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: operator-controller-manager
-  namespace: operator-system
+  name: ghserver-operator-controller-manager
+  namespace: ghserver-operator-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: operator-manager-rolebinding
+  name: ghserver-operator-manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: operator-manager-role
+  name: ghserver-operator-manager-role
 subjects:
 - kind: ServiceAccount
-  name: operator-controller-manager
-  namespace: operator-system
+  name: ghserver-operator-controller-manager
+  namespace: ghserver-operator-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: operator-proxy-rolebinding
+  name: ghserver-operator-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: operator-proxy-role
+  name: ghserver-operator-proxy-role
 subjects:
 - kind: ServiceAccount
-  name: operator-controller-manager
-  namespace: operator-system
+  name: ghserver-operator-controller-manager
+  namespace: ghserver-operator-system
 ---
 apiVersion: v1
 data:
@@ -266,16 +266,16 @@ data:
       resourceName: 6b5d167a.jarpsimoes.github.io
 kind: ConfigMap
 metadata:
-  name: operator-manager-config
-  namespace: operator-system
+  name: ghserver-operator-manager-config
+  namespace: ghserver-operator-system
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     control-plane: controller-manager
-  name: operator-controller-manager-metrics-service
-  namespace: operator-system
+  name: ghserver-operator-controller-manager-metrics-service
+  namespace: ghserver-operator-system
 spec:
   ports:
   - name: https
@@ -290,8 +290,8 @@ kind: Deployment
 metadata:
   labels:
     control-plane: controller-manager
-  name: operator-controller-manager
-  namespace: operator-system
+  name: ghserver-operator-controller-manager
+  namespace: ghserver-operator-system
 spec:
   replicas: 1
   selector:
@@ -331,7 +331,7 @@ spec:
         - --leader-elect
         command:
         - /manager
-        image: docker.io/jarpsimoes/git_http_server_operator:v0.0.1-alpha-3
+        image: docker.io/jarpsimoes/git_http_server_operator:v0.0.1-beta
         livenessProbe:
           httpGet:
             path: /healthz
@@ -356,5 +356,5 @@ spec:
           allowPrivilegeEscalation: false
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: operator-controller-manager
+      serviceAccountName: ghserver-operator-controller-manager
       terminationGracePeriodSeconds: 10
