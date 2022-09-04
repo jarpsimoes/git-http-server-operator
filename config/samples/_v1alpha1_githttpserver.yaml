@@ -4,13 +4,6 @@ metadata:
   name: githttpserver-sample
 spec:
   image: jarpsimoes/git_http_server:v0.bb4aecac
-  repo-url: https://gitlab.com/digilex-infordoc/sicc-frontend-layer-operator.git
   repo-branch: release_ovh
-  repo-username: token-frontend
-  repo-password: glpat-htMVzX6t78-1nLok2hEP
   http-port: 8080
   repo-target: main
-  custom-routes:
-    - path: images/digilex-infordoc-images
-      target: https://storage.gra.cloud.ovh.net/v1/AUTH_ed33ec9e34c64b54aca49d6fcb6dc4c8/infordoc-img
-      rewrite: true
