@@ -51,6 +51,7 @@ type GitHttpServerSpec struct {
 	PathWebHook  string         `json:"path-web-hook,omitempty"`
 	PathHealth   string         `json:"path-health,omitempty"`
 	RepoURL      string         `json:"repo-url"`
+	RootFolder   string         `json:"root-folder"`
 	RepoBranch   string         `json:"repo-branch,omitempty"`
 	RepoTarget   string         `json:"repo-target,omitempty"`
 	RepoUsername string         `json:"repo-username,omitempty"`

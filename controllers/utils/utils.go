@@ -84,6 +84,14 @@ func MergeConfigurationWithEnvironmentVariables(v githttpserver1alpha1.GitHttpSe
 		})
 	}
 
+	if specs.RootFolder != "" {
+		envVariables = append(envVariables, corev1.EnvVar{
+			Name:      "FOLDER_ROOT",
+			Value:     specs.RootFolder,
+			ValueFrom: nil,
+		})
+	}
+
 	customRoutes := specs.CustomRoutes
 
 	for _, customRoute := range customRoutes {
