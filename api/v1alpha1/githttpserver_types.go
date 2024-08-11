@@ -29,6 +29,12 @@ type CustomRoutes struct {
 	Rewrite bool   `json:"rewrite,omitempty"`
 }
 
+type Tolerations struct {
+	Key      string `json:"key"`
+	Operator string `json:"operator"`
+	Value    string `json:"value"`
+}
+
 // GetPath - Return path with no initial slash
 func (in CustomRoutes) GetPath() string {
 	if strings.HasPrefix(in.Path, "/") {
@@ -57,6 +63,7 @@ type GitHttpServerSpec struct {
 	RepoPassword string         `json:"repo-password,omitempty"`
 	HttpPort     int32          `json:"http-port,omitempty"`
 	CustomRoutes []CustomRoutes `json:"custom-routes,omitempty"`
+	Tolerations  []Tolerations  `json:"tolerations,omitempty"`
 }
 
 // GitHttpServerStatus defines the observed state of GitHttpServer

@@ -71,6 +71,7 @@ func (r *GitHttpServerReconciler) backendDeployment(v *githttpserver1alpha1.GitH
 	}
 
 	var livenessProbe = utils.GetProbe(*v)
+	coreToleations := utils.ConvertTolerations(v.Spec.Tolerations)
 
 	labels := labels(v, "backend")
 	size := int32(1)
@@ -89,6 +90,7 @@ func (r *GitHttpServerReconciler) backendDeployment(v *githttpserver1alpha1.GitH
 					Labels: labels,
 				},
 				Spec: corev1.PodSpec{
+					Tolerations: coreToleations,
 					Containers: []corev1.Container{{
 						Image:           v.Spec.Image,
 						ImagePullPolicy: corev1.PullAlways,

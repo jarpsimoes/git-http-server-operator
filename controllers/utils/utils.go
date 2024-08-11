@@ -150,3 +150,14 @@ func portString(n int32) string {
 		}
 	}
 }
+func ConvertTolerations(tolerations []githttpserver1alpha1.Tolerations) []corev1.Toleration {
+	var coreTolerations []corev1.Toleration
+	for _, t := range tolerations {
+		coreTolerations = append(coreTolerations, corev1.Toleration{
+			Key:      t.Key,
+			Operator: corev1.TolerationOperator(t.Operator),
+			Value:    t.Value,
+		})
+	}
+	return coreTolerations
+}
