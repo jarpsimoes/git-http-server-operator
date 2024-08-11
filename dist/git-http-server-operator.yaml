@@ -85,6 +85,21 @@ spec:
                 type: string
               repo-username:
                 type: string
+              tolerations:
+                items:
+                  properties:
+                    key:
+                      type: string
+                    operator:
+                      type: string
+                    value:
+                      type: string
+                  required:
+                  - key
+                  - operator
+                  - value
+                  type: object
+                type: array
             required:
             - repo-url
             type: object
@@ -348,7 +363,7 @@ spec:
         - --leader-elect
         command:
         - /manager
-        image: docker.io/jarpsimoes/git_http_server_operator:v0.0.1-alpha-4
+        image: docker.io/jarpsimoes/git_http_server_operator:v0.0.2-alpha
         livenessProbe:
           httpGet:
             path: /healthz
